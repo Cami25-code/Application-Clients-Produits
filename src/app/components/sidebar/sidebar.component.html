@@ -1,0 +1,19 @@
+<div class="sidebar-content">
+  <h3 class="sidebar-title">Navigation</h3>
+  <div class="list-group">
+    <button
+      class="list-group-item list-group-item-action"
+      [class.active]="activeComponent === 'client'"
+      (click)="setActiveComponent('client')"
+    >
+      Gestion des Clients
+    </button>
+    <button
+      class="list-group-item list-group-item-action"
+      [class.active]="activeComponent === 'produit'"
+      (click)="setActiveComponent('produit')"
+    >
+      Gestion des Produits
+    </button>
+  </div>
+</div>

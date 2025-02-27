@@ -1,0 +1,217 @@
+<div class="row">
+  <!-- Formulaire à gauche -->
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header bg-success text-white">
+        <h3>{{ isEditing ? "Modifier un produit" : "Ajouter un produit" }}</h3>
+      </div>
+
+      <div class="card-body">
+        <form (ngSubmit)="addProduit()" #produitForm="ngForm">
+          <div class="mb-3">
+            <label for="nom" class="form-label">Nom*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nom"
+              name="nom"
+              [(ngModel)]="newProduit.nom"
+              required
+              #nom="ngModel"
+            />
+            <div
+              *NgIf="nom.invalid && (nom.dirty || nom.touched)"
+              class="text-danger"
+            >
+              Le nom est requis.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea
+              class="form-control"
+              id="description"
+              name="description"
+              [(ngModel)]="newProduit.description"
+              rows="3"
+            ></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="prix" class="form-label">Prix (€)*</label>
+            <input
+              type="number"
+              class="form-control"
+              id="prix"
+              name="prix"
+              [(ngModel)]="newProduit.prix"
+              required
+              min="0"
+              step="0.01"
+              #prix="ngModel"
+            />
+            <div
+              *NgIf="prix.invalid && (prix.dirty || prix.touched)"
+              class="text-danger"
+            >
+              <span *NgIf="prix.errors?.['required']">Le prix est requis.</span>
+              <span *NgIf="prix.errors?.['min']"
+                >Le prix doit être positif.</span
+              >
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="quantite" class="form-label">Quantité en stock*</label>
+            <input
+              type="number"
+              class="form-control"
+              id="quantite"
+              name="quantite"
+              [(ngModel)]="newProduit.quantite"
+              required
+              min="0"
+              #quantite="ngModel"
+            />
+            <div
+              *NgIf="quantite.invalid && (quantite.dirty || quantite.touched)"
+              class="text-danger"
+            >
+              <span *NgIf="quantite.errors?.['required']"
+                >La quantité est requise.</span
+              >
+              <span *NgIf="quantite.errors?.['min']"
+                >La quantité doit être positive.</span
+              >
+            </div>
+          </div>
+
+          <div *NgIf="errorMessage" class="alert alert-danger">
+            {{ errorMessage }}
+          </div>
+
+          <div class="d-grid gap-2">
+            <button
+              type="submit"
+              class="btn btn-success"
+              [disabled]="produitForm.invalid"
+            >
+              {{ isEditing ? "Mettre à jour" : "Ajouter" }}
+            </button>
+            <button
+              *NgIf="isEditing"
+              type="button"
+              class="btn btn-secondary"
+              (click)="
+                newProduit = resetProduitForm();
+                isEditing = false;
+                editIndex = -1
+              "
+            >
+              Annuler
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Liste des produits à droite -->
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header bg-success text-white">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <h3>Liste des produits</h3>
+          </div>
+          <div class="col-md-6">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Rechercher..."
+              [(ngModel)]="searchTerm"
+              (keyup)="search()"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Rechercher..."
+        [(ngModel)]="searchTerm"
+        (keyup)="search()"
+      />
+    </div>
+  </div>
+</div>
+<div class="card-body">
+  <div *NgIf="filteredProduits.length === 0" class="alert alert-info">
+    Aucun produit trouvé.
+  </div>
+
+  <table *NgIf="filteredProduits.length > 0" class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Description</th>
+        <th>Prix (€)</th>
+        <th>Stock</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *NgFor="let produit of filteredProduits; let i = index">
+        <td>{{ produit.id }}</td>
+        <td>{{ produit.nom }}</td>
+        <td>{{ produit.description || "N/A" }}</td>
+        <td>{{ produit.prix | currency : "EUR" }}</td>
+        <td>{{ produit.quantite }}</td>
+        <td>
+          <button class="btn btn-sm btn-info me-1" (click)="editProduit(i)">
+            <i class="bi bi-pencil"></i> Modifier
+          </button>
+          <button class="btn btn-sm btn-danger" (click)="confirmDelete(i)">
+            <i class="bi bi-trash"></i> Supprimer
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal de confirmation de suppression -->
+<div *NgIf="showConfirmDelete" class="modal-backdrop show"></div>
+<div *NgIf="showConfirmDelete" class="modal show d-block" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmation de suppression</h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="cancelDelete()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>Êtes-vous sûr de vouloir supprimer ce produit ?</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cancelDelete()"
+        >
+          Annuler
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteProduit()">
+          Supprimer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

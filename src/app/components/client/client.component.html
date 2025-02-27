@@ -1,0 +1,343 @@
+<div class="row">
+  <!-- Formulaire à gauche -->
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h3>{{ isEditing ? "Modifier un client" : "Ajouter un client" }}</h3>
+      </div>
+      <div class="card-body">
+        <form (ngSubmit)="addClient()" #clientForm="ngForm">
+          <div class="mb-3">
+            <label for="nom" class="form-label">Nom*</label>
+            <input
+            type="text"
+            class="form-control"
+            id="nom"
+            name="nom"
+            [(ngModel)]="newClient.nom"
+            required
+            #nom="ngModel"
+            />
+            <div
+              *ngIf="nom.invalid && (nom.dirty || nom.touched)"
+              class="text-danger"
+            >
+              Le nom est requis.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="prenom" class="form-label">Prénom*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="prenom"
+              name="prenom"
+              [(ngModel)]="newClient.prenom"
+              required
+              #prenom="ngModel"
+            />
+            <div
+              *ngIf="prenom.invalid && (prenom.dirty || prenom.touched)"
+              class="text-danger"
+            >
+              Le prénom est requis.
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Formulaire à gauche -->
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-header bg-primary text-white">
+                  <h3>
+                    {{ isEditing ? "Modifier un client" : "Ajouter un client" }}
+                  </h3>
+                </div>
+                <div class="card-body">
+                  <form (ngSubmit)="addClient()" #clientForm="ngForm">
+                    <div class="mb-3">
+                      <label for="nom" class="form-label">Nom*</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="nom"
+                        name="nom"
+                        [(ngModel)]="newClient.nom"
+                        required
+                        #nom="ngModel"
+                      />
+                      <div
+                        *ngIf="nom.invalid && (nom.dirty || nom.touched)"
+                        class="text-danger"
+                      >
+                        Le nom est requis.
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="prenom" class="form-label">Prénom*</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="prenom"
+                        name="prenom"
+                        [(ngModel)]="newClient.prenom"
+                        required
+                        #prenom="ngModel"
+                      />
+                      <div
+                        *ngIf="
+                          prenom.invalid && (prenom.dirty || prenom.touched)
+                        "
+                        class="text-danger"
+                      >
+                        Le prénom est requis.
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="email" class="form-label">Email*</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        name="email"
+                        [(ngModel)]="newClient.email"
+                        required
+                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                        #email="ngModel"
+                      />
+                      <div
+                        *ngIf="email.invalid && (email.dirty || email.touched)"
+                        class="text-danger"
+                      >
+                        <span *ngIf="email.errors?.['required']"
+                          >L'email est requis.</span
+                        >
+                        <span *ngIf="email.errors?.['pattern']"
+                          >L'email n'est pas valide.</span
+                        >
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="telephone" class="form-label"
+                        >Téléphone</label
+                      >
+                      <input
+                        type="tel"
+                        class="form-control"
+                        id="telephone"
+                        name="telephone"
+                        [(ngModel)]="newClient.telephone"
+                      />
+                    </div>
+
+                    <div *ngIf="errorMessage" class="alert alert-danger">
+                      {{ errorMessage }}
+                    </div>
+
+                    <div class="d-grid gap-2">
+                      <button
+                        type="submit"
+                        class="btn btn-primary"
+                        [disabled]="clientForm.invalid"
+                      >
+                        {{ isEditing ? "Mettre à jour" : "Ajouter" }}
+                      </button>
+                      <button
+                        *ngIf="isEditing"
+                        type="button"
+                        class="btn btn-secondary"
+                        (click)="
+                          newClient = resetClientForm();
+                          isEditing = false;
+                          editIndex = -1
+                        "
+                      >
+                        Annuler
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email*</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                [(ngModel)]="newClient.email"
+                required
+                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                #email="ngModel"
+              />
+              <div
+                *ngIf="email.invalid && (email.dirty || email.touched)"
+                class="text-danger"
+              >
+                <span *ngIf="email.errors?.['required']"
+                  >L'email est requis.</span
+                >
+                <span *ngIf="email.errors?.['pattern']"
+                  >L'email n'est pas valide.</span
+                >
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="telephone" class="form-label">Téléphone</label>
+              <input
+                type="tel"
+                class="form-control"
+                id="telephone"
+                name="telephone"
+                [(ngModel)]="newClient.telephone"
+              />
+            </div>
+
+            <div *ngIf="errorMessage" class="alert alert-danger">
+              {{ errorMessage }}
+            </div>
+
+            <div class="d-grid gap-2">
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="clientForm.invalid"
+              >
+                {{ isEditing ? "Mettre à jour" : "Ajouter" }}
+              </button>
+              <button
+                *ngIf="isEditing"
+                type="button"
+                class="btn btn-secondary"
+                (click)="
+                  newClient = resetClientForm();
+                  isEditing = false;
+                  editIndex = -1
+                "
+              >
+                Annuler
+              </button>
+            </div>
+          </div>
+          
+
+          <!-- Liste des clients à droite -->
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header bg-primary text-white">
+                <div class="row align-items-center">
+                  <div class="col-md-6">
+                    <h3>Liste des clients</h3>
+                  </div>
+                  <div class="col-md-6">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Rechercher..."
+                      [(ngModel)]="searchTerm"
+                      (keyup)="search()"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div
+                  *ngIf="filteredClients.length === 0"
+                  class="alert alert-info"
+                >
+                  Aucun client trouvé.
+                </div>
+
+                <table
+                  *ngIf="filteredClients.length > 0"
+                  class="table table-striped"
+                >
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nom</th>
+                      <th>Prénom</th>
+                      <th>Email</th>
+                      <th>Téléphone</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let client of filteredClients; let i = index">
+                      <td>{{ client.id }}</td>
+                      <td>{{ client.nom }}</td>
+                      <td>{{ client.prenom }}</td>
+                      <td>{{ client.email }}</td>
+                      <td>{{ client.telephone || "N/A" }}</td>
+                      <td>
+                        <button
+                          class="btn btn-sm btn-info me-1"
+                          (click)="editClient(i)"
+                        >
+                          <i class="bi bi-pencil"></i> Modifier
+                        </button>
+                        <button
+                          class="btn btn-sm btn-danger"
+                          (click)="confirmDelete(i)"
+                        >
+                          <i class="bi bi-trash"></i> Supprimer
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Modal de confirmation de suppression -->
+            <div *ngIf="showConfirmDelete" class="modal-backdrop show"></div>
+            <div
+              *ngIf="showConfirmDelete"
+              class="modal show d-block"
+              tabindex="-1"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Confirmation de suppression</h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      (click)="cancelDelete()"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Êtes-vous sûr de vouloir supprimer ce client ?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      (click)="cancelDelete()"
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-danger"
+                      (click)="deleteClient()"
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
